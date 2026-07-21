@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { usePortfolioContent } from "./context/PortfolioContentContext.jsx";
 
 const NAV_LINKS = [
   { label: "Home",     path: "/" },
@@ -11,6 +12,7 @@ const NAV_LINKS = [
 export default function Header() {
   const navigate   = useNavigate();
   const location   = useLocation();
+  const { content } = usePortfolioContent();
   const [menuOpen,   setMenuOpen]   = useState(false);
   const [scrolled,   setScrolled]   = useState(false);
 
@@ -21,6 +23,7 @@ export default function Header() {
   }, []);
 
   // Close menu when route changes
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
   const go = (path) => { navigate(path); };
@@ -34,7 +37,7 @@ export default function Header() {
           <div className="brand" onClick={() => go("/")} id="brand-home-btn" role="button" tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && go("/")}>
             <span className="brand-dot" />
-            <span className="brand-name">Arua Oluchukwu</span>
+            <span className="brand-name">{content.meta.brandName}</span>
           </div>
 
           {/* Desktop Nav */}

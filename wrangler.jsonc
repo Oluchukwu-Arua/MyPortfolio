@@ -1,0 +1,19 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "my-portfolio-app",
+	"main": "src/worker.js",
+	"compatibility_date": "2026-07-21",
+	"assets": {
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		],
+		"not_found_handling": "single-page-application"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "PORTFOLIO_CONTENT",
+			"id": "63e226948e0c4dfdb7bc175b20e74eb6"
+		}
+	]
+}
