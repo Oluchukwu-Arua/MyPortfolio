@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./header.jsx";
 import Home from "./pages/Home.jsx";
 import Skills from "./pages/Skills.jsx";
@@ -18,7 +18,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <BrowserRouter basename="/my-portfolio-app">
+    <HashRouter>
       <ScrollToTop />
       <Header />
       <main className="main-content">
@@ -29,7 +29,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
