@@ -34,7 +34,7 @@ export default function Header() {
           <div className="brand" onClick={() => go("/")} id="brand-home-btn" role="button" tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && go("/")}>
             <span className="brand-dot" />
-            <span className="brand-name">Arua Oluchukwukw</span>
+            <span className="brand-name">Arua Oluchukwu</span>
           </div>
 
           {/* Desktop Nav */}
