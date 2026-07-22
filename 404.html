@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opening portfolio...</title>
+  </head>
+  <body>
+    <script>
+      (() => {
+        const basePath = "/MyPortfolio/";
+        const pathname = window.location.pathname;
+        const route = pathname.startsWith(basePath)
+          ? pathname.slice(basePath.length)
+          : pathname.replace(/^\/+/, "");
+        const destination = `${basePath}#/${route}${window.location.search}${window.location.hash}`;
+        window.location.replace(destination);
+      })();
+    </script>
+  </body>
+</html>
