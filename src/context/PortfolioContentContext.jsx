@@ -2,7 +2,13 @@
 import React from "react";
 import { defaultPortfolioContent } from "../content/portfolioContent.js";
 
-const CONTENT_ENDPOINT = "/api/content";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+
+function apiUrl(path) {
+  return `${API_BASE_URL}${path}`;
+}
+
+const CONTENT_ENDPOINT = apiUrl("/api/content");
 
 const PortfolioContentContext = React.createContext(null);
 
@@ -35,7 +41,7 @@ async function uploadImageFile(file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await fetch("/api/images", {
+  const response = await fetch(apiUrl("/api/images"), {
     method: "POST",
     body: formData,
   });

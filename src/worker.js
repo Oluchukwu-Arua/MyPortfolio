@@ -24,6 +24,18 @@ function json(data, init = {}) {
   });
 }
 
+function corsPreflight() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "access-control-allow-origin": "*",
+      "access-control-allow-headers": "content-type, authorization, x-admin-key",
+      "access-control-allow-methods": "GET, PUT, POST, OPTIONS",
+      "access-control-max-age": "86400",
+    },
+  });
+}
+
 async function readContent(env) {
   const stored = await env.PORTFOLIO_CONTENT.get(CONTENT_KEY, { type: "json" });
   return stored || defaultPortfolioContent;
@@ -61,7 +73,7 @@ async function uploadImage(request, env) {
 
   return json({
     id: imageId,
-    url: `/api/images/${imageId}`,
+    url: new URL(`/api/images/${imageId}`, request.url).href,
   }, { status: 201 });
 }
 
@@ -99,7 +111,7 @@ export default {
 
     if (url.pathname === "/api/images") {
       if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204 });
+        return corsPreflight();
       }
 
       if (request.method === "POST") {
@@ -124,7 +136,7 @@ export default {
 
     if (url.pathname === "/api/content") {
       if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204 });
+        return corsPreflight();
       }
 
       if (request.method === "GET") {
