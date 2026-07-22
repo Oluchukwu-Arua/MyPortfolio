@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { usePortfolioContent } from "../context/PortfolioContentContext.jsx";
 import { renderIcon } from "../content/iconLibrary.jsx";
+import { applyImageFallback, resolveMediaUrl } from "../utils/urls.js";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -65,10 +66,10 @@ export default function Home() {
           <div className="hero-image-side">
             <div className="hero-image-ring">
               <img
-                src={hero.image.src}
+                src={resolveMediaUrl(hero.image.src)}
                 alt={hero.image.alt}
                 className="profile-img"
-                onError={(e) => { e.currentTarget.src = hero.image.fallback; }}
+                onError={(event) => applyImageFallback(event, hero.image.fallback)}
               />
             </div>
 

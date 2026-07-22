@@ -1,12 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import { defaultPortfolioContent } from "../content/portfolioContent.js";
-
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
-
-function apiUrl(path) {
-  return `${API_BASE_URL}${path}`;
-}
+import { apiUrl } from "../utils/urls.js";
 
 const CONTENT_ENDPOINT = apiUrl("/api/content");
 

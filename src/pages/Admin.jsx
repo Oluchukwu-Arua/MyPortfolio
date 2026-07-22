@@ -1,6 +1,7 @@
 import React from "react";
 import { iconOptions } from "../content/iconLibrary.jsx";
 import { usePortfolioContent } from "../context/PortfolioContentContext.jsx";
+import { resolveMediaUrl } from "../utils/urls.js";
 
 const createProject = () => ({
   id: Date.now(),
@@ -94,7 +95,7 @@ function ImageUploadField({ label, value, onChange, uploadImage, help }) {
       {value && !previewFailed ? (
         <img
           className="admin-image-preview"
-          src={value}
+          src={resolveMediaUrl(value)}
           alt={`${label} preview`}
           onError={() => setPreviewFailed(true)}
         />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePortfolioContent } from "../context/PortfolioContentContext.jsx";
+import { applyImageFallback, resolveMediaUrl } from "../utils/urls.js";
 
 export default function Projects() {
   const { content } = usePortfolioContent();
@@ -53,9 +54,9 @@ export default function Projects() {
               <article key={proj.id} className="project-card">
                 <div className="project-image-wrap">
                   <img
-                    src={proj.image}
+                    src={resolveMediaUrl(proj.image)}
                     alt={proj.title}
-                    onError={(e) => { e.currentTarget.src = proj.fallback; }}
+                    onError={(event) => applyImageFallback(event, proj.fallback)}
                   />
                   <span className={`project-domain-badge ${proj.domain === "bi" ? "badge-bi" : "badge-health"}`}>
                     {proj.domain === "bi" ? "Business Intelligence" : "Healthcare"}
