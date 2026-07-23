@@ -930,6 +930,143 @@ img { display: block; max-width: 100%; }
 }
 
 /* ─── Admin Dashboard ──────────────────────────────── */
+.admin-lock-page {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 18% 15%, rgba(59, 130, 246, 0.24), transparent 34%),
+    radial-gradient(circle at 82% 85%, rgba(14, 165, 233, 0.18), transparent 32%),
+    linear-gradient(145deg, #07152F 0%, #102A56 52%, #0B1D3A 100%);
+}
+
+.admin-pin-card {
+  width: min(100%, 470px);
+  padding: 42px;
+  text-align: center;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 30px;
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 30px 80px rgba(2, 8, 23, 0.45);
+  backdrop-filter: blur(24px);
+}
+
+.admin-lock-icon {
+  position: relative;
+  width: 76px;
+  height: 64px;
+  margin: 20px auto 24px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #60A5FA, #2563EB);
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.38);
+}
+
+.admin-lock-icon::before {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 18px;
+  top: -26px;
+  border: 8px solid #93C5FD;
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+}
+
+.admin-lock-icon span {
+  position: absolute;
+  width: 8px;
+  height: 20px;
+  left: 34px;
+  top: 23px;
+  border-radius: 999px;
+  background: #EFF6FF;
+}
+
+.admin-pin-badge {
+  margin: 0 auto 16px;
+  background: rgba(255,255,255,0.1);
+  color: #DBEAFE;
+}
+
+.admin-pin-card h1 {
+  margin-bottom: 10px;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 2.7rem);
+  letter-spacing: -0.035em;
+}
+
+.admin-pin-card > p {
+  max-width: 340px;
+  margin: 0 auto 28px;
+  color: rgba(255,255,255,0.68);
+  line-height: 1.7;
+}
+
+.admin-pin-digits {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  cursor: text;
+}
+
+.admin-pin-digit {
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(147,197,253,0.32);
+  border-radius: 16px;
+  background: rgba(15,23,42,0.46);
+  color: #BFDBFE;
+  font-size: 2rem;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.admin-pin-digit.is-filled {
+  border-color: #60A5FA;
+  background: rgba(37,99,235,0.24);
+  transform: translateY(-2px);
+}
+
+.admin-pin-digits.has-error .admin-pin-digit {
+  border-color: #F87171;
+}
+
+.admin-pin-native-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+}
+
+.admin-pin-feedback {
+  min-height: 42px;
+  padding: 10px 0;
+  color: #BFDBFE;
+  font-size: 0.82rem;
+}
+
+.admin-pin-digits.has-error + .admin-pin-feedback {
+  color: #FCA5A5;
+}
+
+.admin-pin-submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.admin-pin-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
 .admin-page {
   padding: 40px 0 80px;
   background:

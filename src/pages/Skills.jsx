@@ -33,7 +33,7 @@ export default function Skills() {
             </div>
 
             <div className="skills-intro-visual">
-              {skillBars.map((bar) => (
+              {[...skillBars].sort((first, second) => Number(second.pct) - Number(first.pct)).map((bar) => (
                 <div key={bar.name} className="skill-bar-item">
                   <div className="skill-bar-label">
                     <span>{bar.name}</span>

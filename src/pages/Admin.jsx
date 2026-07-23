@@ -3,6 +3,9 @@ import { iconOptions } from "../content/iconLibrary.jsx";
 import { usePortfolioContent } from "../context/PortfolioContentContext.jsx";
 import { resolveMediaUrl } from "../utils/urls.js";
 
+const ADMIN_PIN = "1331";
+const ADMIN_UNLOCK_KEY = "portfolio-admin-unlocked";
+
 const createProject = () => ({
   id: Date.now(),
   domain: "bi",
@@ -16,6 +19,8 @@ const createProject = () => ({
 const createTextLink = (label = "New Link", href = "#", icon = "linkedin") => ({ label, href, icon });
 
 const createInfoItem = () => ({ label: "New Item", value: "Edit me", href: "" });
+
+const createHeroStat = () => ({ value: "0+", label: "New stat" });
 
 function updateAtIndex(list, index, nextValue) {
   return list.map((item, itemIndex) => (itemIndex === index ? nextValue : item));
@@ -124,10 +129,83 @@ function ImageUploadField({ label, value, onChange, uploadImage, help }) {
   );
 }
 
+function AdminPinGate({ onUnlock }) {
+  const [pin, setPin] = React.useState("");
+  const [error, setError] = React.useState("");
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const submitPin = (event) => {
+    event.preventDefault();
+
+    if (pin !== ADMIN_PIN) {
+      setError("Incorrect PIN. Please try again.");
+      setPin("");
+      inputRef.current?.focus();
+      return;
+    }
+
+    window.sessionStorage.setItem(ADMIN_UNLOCK_KEY, "true");
+    onUnlock();
+  };
+
+  const updatePin = (event) => {
+    setPin(event.target.value.replace(/\D/g, "").slice(0, 4));
+    setError("");
+  };
+
+  return (
+    <div className="admin-lock-page">
+      <div className="admin-pin-card">
+        <div className="admin-lock-icon" aria-hidden="true"><span /></div>
+        <div className="section-badge admin-pin-badge">
+          <span className="section-badge-dot" /> Secure Admin
+        </div>
+        <h1>Welcome back</h1>
+        <p>Enter your four-digit PIN to access the portfolio dashboard.</p>
+
+        <form onSubmit={submitPin}>
+          <div
+            className={`admin-pin-digits${error ? " has-error" : ""}`}
+            onClick={() => inputRef.current?.focus()}
+          >
+            {[0, 1, 2, 3].map((index) => (
+              <span className={`admin-pin-digit${pin[index] ? " is-filled" : ""}`} key={index}>
+                {pin[index] ? "•" : ""}
+              </span>
+            ))}
+            <input
+              ref={inputRef}
+              className="admin-pin-native-input"
+              type="password"
+              inputMode="numeric"
+              autoComplete="off"
+              aria-label="Four-digit admin PIN"
+              value={pin}
+              onChange={updatePin}
+              maxLength={4}
+            />
+          </div>
+          <div className="admin-pin-feedback" aria-live="polite">
+            {error || "Your access remains unlocked for this browser tab."}
+          </div>
+          <button className="btn-primary admin-pin-submit" type="submit" disabled={pin.length !== 4}>
+            Unlock Dashboard
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function Admin() {
   const { content, setContent, persist, refresh, uploadImage, isSaving, error, clearError } = usePortfolioContent();
   const [draft, setDraft] = React.useState(content);
   const [message, setMessage] = React.useState("");
+  const [isUnlocked, setIsUnlocked] = React.useState(() => window.sessionStorage.getItem(ADMIN_UNLOCK_KEY) === "true");
 
   React.useEffect(() => {
     setDraft(content);
@@ -164,6 +242,16 @@ export default function Admin() {
     setDraft((current) => ({ ...current, projects: { ...current.projects, projects: [...current.projects.projects, createProject()] } }));
   };
 
+  const lockAdmin = () => {
+    window.sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
+    setIsUnlocked(false);
+    setMessage("");
+  };
+
+  if (!isUnlocked) {
+    return <AdminPinGate onUnlock={() => setIsUnlocked(true)} />;
+  }
+
   return (
     <div className="admin-page">
       <header className="admin-hero container">
@@ -177,6 +265,7 @@ export default function Admin() {
           </p>
         </div>
         <div className="admin-hero-actions">
+          <button className="btn-outline" onClick={lockAdmin} type="button">Lock Admin</button>
           <button className="btn-outline" onClick={refresh} type="button">Reload Live Content</button>
           <button className="btn-outline" onClick={resetToSaved} type="button">Reset Draft</button>
           <button className="btn-primary" onClick={save} type="button" disabled={isSaving}>
@@ -211,11 +300,13 @@ export default function Admin() {
           <div className="admin-list-block">
             <div className="admin-list-header">
               <strong>Hero stats</strong>
+              <button className="btn-outline admin-inline-button" type="button" onClick={() => updateDraft(["home", "hero", "stats"], [...draft.home.hero.stats, createHeroStat()])}>Add stat</button>
             </div>
             {draft.home.hero.stats.map((stat, index) => (
               <div className="admin-list-row" key={`${stat.label}-${index}`}>
                 <TextInput value={stat.value} onChange={(e) => updateDraft(["home", "hero", "stats"], updateAtIndex(draft.home.hero.stats, index, { ...stat, value: e.target.value }))} />
                 <TextInput value={stat.label} onChange={(e) => updateDraft(["home", "hero", "stats"], updateAtIndex(draft.home.hero.stats, index, { ...stat, label: e.target.value }))} />
+                <button className="btn-outline admin-inline-button" type="button" onClick={() => updateDraft(["home", "hero", "stats"], draft.home.hero.stats.filter((_, itemIndex) => itemIndex !== index))}>Remove</button>
               </div>
             ))}
           </div>
