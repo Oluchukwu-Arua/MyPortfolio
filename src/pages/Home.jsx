@@ -104,7 +104,7 @@ export default function Home() {
             </h2>
             <p className="section-subtitle">
               Uniquely positioned at the intersection of business intelligence and
-              healthcare data analytics — delivering insights that matter in both worlds.
+              healthcare data analytics, delivering insights that matter in both worlds.
             </p>
           </div>
 

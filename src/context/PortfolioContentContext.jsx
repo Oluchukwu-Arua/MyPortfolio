@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from "react";
-import { defaultPortfolioContent } from "../content/portfolioContent.js";
 import { apiUrl } from "../utils/urls.js";
 
 const CONTENT_ENDPOINT = apiUrl("/api/content");
@@ -50,7 +49,7 @@ async function uploadImageFile(file) {
 }
 
 export function PortfolioContentProvider({ children }) {
-  const [content, setContent] = React.useState(defaultPortfolioContent);
+  const [content, setContent] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -62,16 +61,13 @@ export function PortfolioContentProvider({ children }) {
       .then((nextContent) => {
         if (!cancelled && nextContent) {
           setContent(nextContent);
+          setIsLoaded(true);
+          setError("");
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setError("Using local default content until the Worker API is available.");
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsLoaded(true);
+          setError("We couldn't load the latest portfolio content.");
         }
       });
 
@@ -81,9 +77,17 @@ export function PortfolioContentProvider({ children }) {
   }, []);
 
   const refresh = React.useCallback(async () => {
-    const nextContent = await fetchContent();
-    setContent(nextContent);
-    return nextContent;
+    setError("");
+
+    try {
+      const nextContent = await fetchContent();
+      setContent(nextContent);
+      setIsLoaded(true);
+      return nextContent;
+    } catch (refreshError) {
+      setError(refreshError.message || "We couldn't load the latest portfolio content.");
+      throw refreshError;
+    }
   }, []);
 
   const update = React.useCallback((nextContent) => {
